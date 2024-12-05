@@ -1,0 +1,13 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+
+
+    //Add the edit link to project menu
+    var newLink = '<%= j link_to_if_authorized l(:label_edit_overview_page), {controller: "blocks", action: "edit_overview", project_id: @project}, class: "icon icon-edit" %>';
+    $('.contextual').append(newLink);
+
+    <% unless OverviewBlock.find_by(project_id: project, name: 'issues') %>
+      $('div.issues.box').remove();
+    <%end%>
+  });
+</script>

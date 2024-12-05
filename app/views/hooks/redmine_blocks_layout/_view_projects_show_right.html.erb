@@ -1,0 +1,12 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    <% unless OverviewBlock.find_by(project_id: project, name: 'news') %>
+      $('div.news.box').remove();
+    <%end%>
+
+    <% unless OverviewBlock.find_by(project_id: project, name: 'members') %>
+      $('div.members.box').remove();
+    <%end%>
+  });
+</script>

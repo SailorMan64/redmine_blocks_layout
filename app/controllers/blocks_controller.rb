@@ -1,45 +1,40 @@
 class BlocksController < ApplicationController
-  unloadable
 
-  before_filter :find_project,:authorize, :except=>[:edit_home]
-  before_filter :require_admin, :only =>[:edit_home]
+  before_action :find_project, :authorize, except: [:edit_home]
+  before_action :require_admin, only: [:edit_home]
 
   def edit_overview
-    list = OverviewBlock.where(:project_id => @project)
-    @current_blocks=list ? list.collect{|b| b.name} : []
+    @current_blocks = OverviewBlock.where(project_id: @project.id).pluck(:name)
+
     if request.post?
-      blocks = params[:blocks]
-      blocks = [] unless blocks
+      blocks = params[:blocks] || []
       to_remove = @current_blocks - blocks
-      to_remove.each do |block|
-        OverviewBlock.find_by_name_and_project_id(block, @project.id).destroy
-      end
+      OverviewBlock.where(project_id: @project.id, name: to_remove).destroy_all
+
       to_add = blocks - @current_blocks
       to_add.each do |block|
-        id = @project.id
-        OverviewBlock.new(:project_id => id, :name=>block).save
+        OverviewBlock.create!(project_id: @project.id, name: block)
       end
-      redirect_to :controller => 'projects', :action=>'show', :id => @project
+
+      redirect_to controller: 'projects', action: 'show', id: @project
     end
   end
 
   def edit_home
-    list = HomeBlock.all
-    @current_blocks=list ? list.collect{|b| b.name} : []
+    @current_blocks = HomeBlock.pluck(:name)
+
     if request.post?
-      blocks = params[:blocks]
-      blocks = [] unless blocks
+      blocks = params[:blocks] || []
       to_remove = @current_blocks - blocks
-      to_remove.each do |block|
-        HomeBlock.find_by_name(block).destroy
-      end
+      HomeBlock.where(name: to_remove).destroy_all
+
       to_add = blocks - @current_blocks
       to_add.each do |block|
-        HomeBlock.new(:name=>block).save
+        HomeBlock.create!(name: block)
       end
+
       redirect_to home_url
     end
-
   end
 
   private

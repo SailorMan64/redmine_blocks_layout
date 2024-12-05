@@ -1,38 +1,22 @@
-class CreateTables < ActiveRecord::Migration
-  def self.up
+class CreateTables < ActiveRecord::Migration[4.2]
+  def change
     create_table :overview_blocks do |t|
-      t.column :project_id, :integer, :null =>false
-      t.column :name, :string, :unique=>true, :null => false
+      t.integer :project_id, null: false, unique: true
+      t.string :name, null: false
     end
 
     create_table :home_blocks do |t|
-      t.column :name, :string, :unique=>true, :null => false
+      t.string :name, null: false, unique: true
     end
 
-    Project.all.each do |prj|
-      OverviewBlock.new do |ob|
-        ob.project_id = prj.id
-        ob.name = 'members'
-        ob.save
-      end
-
-      OverviewBlock.new do |ob|
-        ob.project_id = prj.id
-        ob.name = 'news'
-        ob.save
-      end
-
-      OverviewBlock.new do |ob|
-        ob.project_id = prj.id
-        ob.name = 'issues'
-        ob.save
+    reversible do |dir|
+      dir.up do
+        Project.find_each do |prj|
+          %w[members news issues].each do |block_name|
+            OverviewBlock.create!(project_id: prj.id, name: block_name)
+          end
+        end
       end
     end
-
-  end
-
-  def self.down
-    drop_table :overview_blocks
-    drop_table :home_blocks
   end
 end

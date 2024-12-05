@@ -1,0 +1,26 @@
+<%if HomeBlock.find_by(name: 'projects')%>
+  <% @projects = User.current.projects %>
+    <% if @projects.any? %>
+      <div class='projects box'>
+        <h3><%=l(:label_project_latest)%></h3>
+          <ul>
+            <% @projects.each do |project| %>
+              <li>
+                <%= link_to h(project.name), controller: 'projects', action: 'show', id: project %>
+                (<%= format_time(project.created_on) %>)
+                <%= textilizable project.short_description, project: project %>
+              </li>
+            <% end %>
+          </ul>
+        </h3>
+      </div>
+    <% end %>
+<%end%>
+
+<% unless HomeBlock.find_by(name: 'news') %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('div.news.box').remove();
+    });
+  </script>
+<%end%>
