@@ -1,7 +1,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
-    var editHomePageLink = '<%= j link_to l(:label_edit_home_page), { controller: "blocks", action: "edit_home" }, class: "icon icon-edit"  if User.current.admin? %>';
+    var editHomePageLink = '<%= j link_to l(:label_edit_home_page), { controller: "blocks", action: "edit_home" }, class: "icon icon-edit blocks-layout-welcome-edit-button"  if User.current.admin? %>';
     $('h2').before(editHomePageLink);
   });
 </script>
