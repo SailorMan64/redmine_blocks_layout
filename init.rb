@@ -10,7 +10,7 @@ Redmine::Plugin.register :redmine_blocks_layout do
 
   requires_redmine version_or_higher: '5.0'
 
-  project_module :redmine_blocks_layout do
+  project_module :blocks_layout do
     permission :edit_overview, { blocks: [:edit_overview]}
   end
 end
